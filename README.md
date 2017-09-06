@@ -1,5 +1,5 @@
 # Commanded Swarm registry
 
-Distributed process registration using [Swarm](https://hex.pm/packages/swarm) for [Commanded](https://github.com/slashdotdash/commanded).
+Distributed process registry using [Swarm](https://hex.pm/packages/swarm) for [Commanded](https://github.com/slashdotdash/commanded).
 
-Supports running Commanded on a cluster of nodes.
+Supports running [Commanded](https://github.com/slashdotdash/commanded) on a cluster of nodes.

@@ -9,6 +9,7 @@ config :ex_unit,
 
 config :commanded,
   event_store_adapter: Commanded.EventStore.Adapters.EventStore,
+  reset_storage: &Commanded.Storage.reset!/0,
   registry: Commanded.Registration.SwarmRegistry
 
 config :eventstore, EventStore.Storage,

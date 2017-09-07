@@ -21,13 +21,14 @@ defmodule Commanded.Registration.SwarmRegistry.Mixfile do
     [
       extra_applications: [
         :logger,
+        :eventstore,
       ]
     ]
   end
 
   defp deps do
     [
-      {:commanded, path: "deps/commanded", runtime: false, override: true},
+      {:commanded, path: "deps/commanded", runtime: Mix.env == :test, override: true},
       {:commanded_eventstore_adapter, "~> 0.1.0", only: :test},
       {:eventstore, "~> 0.10", only: :test},
       {:ex_doc, "~> 0.15", only: :dev},

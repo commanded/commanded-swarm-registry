@@ -28,6 +28,7 @@ defmodule Commanded.Registration.SwarmRegistry do
         end
 
       pid ->
+        Process.link(pid)
         {:ok, pid}
     end
   end
@@ -48,6 +49,7 @@ defmodule Commanded.Registration.SwarmRegistry do
         end
 
       pid ->
+        Process.link(pid)
         {:ok, pid}
     end
   end

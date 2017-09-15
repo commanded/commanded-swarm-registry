@@ -12,6 +12,9 @@ config :commanded,
   reset_storage: &Commanded.Storage.reset!/0,
   registry: Commanded.Registration.SwarmRegistry
 
+config :eventstore,
+  registry: :distributed
+
 config :eventstore, EventStore.Storage,
   serializer: Commanded.Serialization.JsonSerializer,
   username: "postgres",

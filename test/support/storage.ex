@@ -4,6 +4,7 @@ defmodule Commanded.Storage do
 
     Enum.each(nodes(), fn node ->
       Commanded.Cluster.rpc(node, Application, :stop, [:commanded])
+      Commanded.Cluster.rpc(node, Application, :stop, [:eventstore])
     end)
 
     with {:ok, conn} <- EventStore.configuration() |> EventStore.Config.parse() |> Postgrex.start_link() do

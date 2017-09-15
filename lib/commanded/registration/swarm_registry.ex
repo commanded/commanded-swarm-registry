@@ -13,6 +13,26 @@ defmodule Commanded.Registration.SwarmRegistry do
   def child_spec, do: []
 
   @doc """
+  Starts a uniquely named child process of a supervisor using the given module and args.
+
+  Registers the pid with the given name.
+  """
+  @spec start_child(name :: term(), supervisor :: module(), args :: [any()]) :: {:ok, pid()} | {:error, reason :: term()}
+  @impl Commanded.Registration
+  def start_child(name, supervisor, args) do
+    case whereis_name(name) do
+      :undefined ->
+        case Swarm.register_name(name, Supervisor, :start_child, [supervisor, args]) do
+          {:error, {:already_registered, pid}} -> {:error, {:already_started, pid}}
+          reply -> reply
+        end
+
+      pid ->
+        {:ok, pid}
+    end
+  end
+
+  @doc """
   Starts a uniquely named `GenServer` process for the given module and args.
 
   Registers the pid with the given name.
@@ -23,9 +43,8 @@ defmodule Commanded.Registration.SwarmRegistry do
     case whereis_name(name) do
       :undefined ->
         case Swarm.register_name(name, GenServer, :start_link, [module, args]) do
-          {:ok, pid} -> {:ok, pid}
-          {:error, {:already_registered, pid}} -> {:ok, pid}
-          {:error, _reason} = reply -> reply
+          {:error, {:already_registered, pid}} -> {:error, {:already_started, pid}}
+          reply -> reply
         end
 
       pid ->
@@ -50,7 +69,7 @@ defmodule Commanded.Registration.SwarmRegistry do
   #
   # `GenServer` callback functions used by Swarm
   #
-  
+
   # Shutdown the process when a cluster toplogy change indicates it is now running on the wrong host.
   # This is to prevent a spike in process restarts as they are moved.
   # Instead, allow the process to be started on request.

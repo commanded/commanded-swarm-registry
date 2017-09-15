@@ -8,6 +8,7 @@ config :ex_unit,
   refute_receive_timeout: 2_000
 
 config :commanded,
+  assert_receive_event_timeout: 2_000,
   event_store_adapter: Commanded.EventStore.Adapters.EventStore,
   reset_storage: &Commanded.Storage.reset!/0,
   registry: Commanded.Registration.SwarmRegistry

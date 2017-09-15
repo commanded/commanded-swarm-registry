@@ -28,7 +28,7 @@ defmodule Commanded.Registration.SwarmRegistry.Mixfile do
 
   defp deps do
     [
-      {:commanded, path: "deps/commanded", runtime: Mix.env == :test, override: true},
+      {:commanded, "~> 0.14", runtime: Mix.env == :test, override: true},
       {:commanded_eventstore_adapter, "~> 0.1.0", only: :test},
       {:eventstore, "~> 0.10", only: :test},
       {:ex_doc, "~> 0.15", only: :dev},
@@ -42,7 +42,15 @@ Distributed process registry using Swarm for Commanded
 """
   end
 
-  defp elixirc_paths(:test), do: ["lib", "test/support", "deps/commanded/test/aggregates", "deps/commanded/test/example_domain"]
+  @commanded_elixirc_paths [
+    "deps/commanded/test/aggregates/support",
+    "deps/commanded/test/commands/support",
+    "deps/commanded/test/event/support",
+    "deps/commanded/test/example_domain",
+    "deps/commanded/test/process_managers/support",
+  ]
+
+  defp elixirc_paths(:test), do: ["lib", "test/support"] ++ @commanded_elixirc_paths
   defp elixirc_paths(_),     do: ["lib"]
 
   defp package do

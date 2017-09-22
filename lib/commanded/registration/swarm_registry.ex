@@ -5,6 +5,8 @@ defmodule Commanded.Registration.SwarmRegistry do
 
   @behaviour Commanded.Registration
 
+  alias Commanded.Registration.SwarmRegistry.Monitor
+
   @doc """
   Return an optional supervisor spec for the registry
   """
@@ -40,19 +42,7 @@ defmodule Commanded.Registration.SwarmRegistry do
   """
   @spec start_link(name :: term(), module :: module(), args :: [any()]) :: {:ok, pid()} | {:error, reason :: term()}
   @impl Commanded.Registration
-  def start_link(name, module, args) do
-    case whereis_name(name) do
-      :undefined ->
-        case Swarm.register_name(name, GenServer, :start_link, [module, args]) do
-          {:error, {:already_registered, pid}} -> {:error, {:already_started, pid}}
-          reply -> reply
-        end
-
-      pid ->
-        Process.link(pid)
-        {:ok, pid}
-    end
-  end
+  def start_link(name, module, args), do: Monitor.start_link(name, module, args)
 
   @doc """
   Get the pid of a registered name.

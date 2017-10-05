@@ -12,6 +12,7 @@ defmodule Commanded.Registration.SwarmRegistry.Mixfile do
       start_permanent: Mix.env == :prod,
       deps: deps(),
       description: description(),
+      docs: docs(),
       package: package(),
       source_url: "https://github.com/commanded/commanded-swarm-registry",
     ]
@@ -19,26 +20,26 @@ defmodule Commanded.Registration.SwarmRegistry.Mixfile do
 
   def application do
     [
-      extra_applications: [
-        :logger,
-        :eventstore,
-      ]
+      extra_applications: extra_applications(Mix.env),
     ]
   end
 
+  defp extra_applications(:test), do: [:logger, :eventstore]
+  defp extra_applications(_),     do: [:logger]
+
   defp deps do
     [
-      {:commanded, "~> 0.14", runtime: Mix.env == :test, override: true},
-      {:commanded_eventstore_adapter, "~> 0.1.0", only: :test},
-      {:eventstore, "~> 0.10", only: :test},
+      {:commanded, path: "deps/commanded", runtime: Mix.env == :test, override: true},
+      {:commanded_eventstore_adapter, "~> 0.2.0", only: :test},
+      {:eventstore, path: "~/src/eventstore", only: :test, override: true},
       {:ex_doc, "~> 0.15", only: :dev},
-      {:swarm, "~> 3.0"},
+      {:swarm, path: "~/src/swarm", override: true},
     ]
   end
 
   defp description do
 """
-Distributed process registry using Swarm for Commanded
+Distributed process registry for Commanded using Swarm
 """
   end
 
@@ -49,6 +50,18 @@ Distributed process registry using Swarm for Commanded
     "deps/commanded/test/example_domain",
     "deps/commanded/test/process_managers/support",
   ]
+
+  defp docs do
+    [
+      main: "Commanded.Registration.SwarmRegistry",
+      canonical: "http://hexdocs.pm/commanded_swarm_registry",
+      source_ref: "v#{@version}",
+      extra_section: "GUIDES",
+      extras: [
+        "guides/Getting Started.md",
+      ],
+    ]
+  end
 
   defp elixirc_paths(:test), do: ["lib", "test/support"] ++ @commanded_elixirc_paths
   defp elixirc_paths(_),     do: ["lib"]

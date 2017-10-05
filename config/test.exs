@@ -27,5 +27,7 @@ config :eventstore, EventStore.Storage,
 config :swarm,
   nodes: [:"node1@127.0.0.1", :"node2@127.0.0.1"],
   node_blacklist: [~r/^primary@.+$/],
+  distribution_strategy: Swarm.Distribution.StaticQuorumRing,
+  static_quorum_size: 2,
   sync_nodes_timeout: 0,
   debug: false

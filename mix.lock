@@ -1,10 +1,10 @@
 %{"commanded": {:hex, :commanded, "0.13.0", "cf21998c19eaaa38e2f25216d2fd9889f659e4efb05fea15c5f36688d4e4bf77", [], [{:poison, "~> 3.1", [hex: :poison, repo: "hexpm", optional: false]}, {:uuid, "~> 1.1", [hex: :uuid, repo: "hexpm", optional: false]}], "hexpm"},
-  "commanded_eventstore_adapter": {:hex, :commanded_eventstore_adapter, "0.1.0", "f409c0e8fbe2b6c25198a26406720dc500bf7c7888d72d18753905afbe1b1de9", [], [{:commanded, "~> 0.10", [hex: :commanded, repo: "hexpm", optional: false]}, {:eventstore, "~> 0.9", [hex: :eventstore, repo: "hexpm", optional: false]}], "hexpm"},
+  "commanded_eventstore_adapter": {:hex, :commanded_eventstore_adapter, "0.2.0", "066300d76eaaca3cb7ac3f09dbe7cb4408ae02bcc7d9d63b5cb3ea470e21c569", [:mix], [{:commanded, "~> 0.10", [hex: :commanded, repo: "hexpm", optional: false]}, {:eventstore, ">= 0.11.0", [hex: :eventstore, repo: "hexpm", optional: false]}], "hexpm"},
   "connection": {:hex, :connection, "1.0.4", "a1cae72211f0eef17705aaededacac3eb30e6625b04a6117c1b2db6ace7d5976", [], [], "hexpm"},
   "db_connection": {:hex, :db_connection, "1.1.2", "2865c2a4bae0714e2213a0ce60a1b12d76a6efba0c51fbda59c9ab8d1accc7a8", [], [{:connection, "~> 1.0.2", [hex: :connection, repo: "hexpm", optional: false]}, {:poolboy, "~> 1.5", [hex: :poolboy, repo: "hexpm", optional: true]}, {:sbroker, "~> 1.0", [hex: :sbroker, repo: "hexpm", optional: true]}], "hexpm"},
   "decimal": {:hex, :decimal, "1.4.0", "fac965ce71a46aab53d3a6ce45662806bdd708a4a95a65cde8a12eb0124a1333", [], [], "hexpm"},
   "earmark": {:hex, :earmark, "1.2.3", "206eb2e2ac1a794aa5256f3982de7a76bf4579ff91cb28d0e17ea2c9491e46a4", [], [], "hexpm"},
-  "eventstore": {:hex, :eventstore, "0.10.0", "c49bbef329b24d5e1014c1dfcbe6ef20c615f23962d9852295047acbb8a2e38f", [], [{:fsm, "~> 0.3", [hex: :fsm, repo: "hexpm", optional: false]}, {:poolboy, "~> 1.5", [hex: :poolboy, repo: "hexpm", optional: false]}, {:postgrex, "~> 0.13", [hex: :postgrex, repo: "hexpm", optional: false]}], "hexpm"},
+  "eventstore": {:git, "https://github.com/slashdotdash/eventstore.git", "ba3f8f2ddadccaa2b813cc9111353ba5cc5332a9", []},
   "ex_doc": {:hex, :ex_doc, "0.16.3", "cd2a4cfe5d26e37502d3ec776702c72efa1adfa24ed9ce723bb565f4c30bd31a", [], [{:earmark, "~> 1.1", [hex: :earmark, repo: "hexpm", optional: false]}], "hexpm"},
   "fsm": {:hex, :fsm, "0.3.0", "d00e0a3c68f8cf8feb24ce3a732164638ec652c48ce416b66d4e375b6ee415eb", [], [], "hexpm"},
   "gen_state_machine": {:hex, :gen_state_machine, "2.0.1", "85efd5a0376929c3a4246dd943e17564a2908c7ddd7acd242d84594e785d83f8", [], [], "hexpm"},
@@ -12,5 +12,5 @@
   "poison": {:hex, :poison, "3.1.0", "d9eb636610e096f86f25d9a46f35a9facac35609a7591b3be3326e99a0484665", [], [], "hexpm"},
   "poolboy": {:hex, :poolboy, "1.5.1", "6b46163901cfd0a1b43d692657ed9d7e599853b3b21b95ae5ae0a777cf9b6ca8", [], [], "hexpm"},
   "postgrex": {:hex, :postgrex, "0.13.3", "c277cfb2a9c5034d445a722494c13359e361d344ef6f25d604c2353185682bfc", [], [{:connection, "~> 1.0", [hex: :connection, repo: "hexpm", optional: false]}, {:db_connection, "~> 1.1", [hex: :db_connection, repo: "hexpm", optional: false]}, {:decimal, "~> 1.0", [hex: :decimal, repo: "hexpm", optional: false]}], "hexpm"},
-  "swarm": {:hex, :swarm, "3.0.5", "c54ead44ca5f879959899f325f0e6b904e1a219faecb24ca4e55aad1fe38fecc", [], [{:gen_state_machine, "~> 2.0", [hex: :gen_state_machine, repo: "hexpm", optional: false]}, {:libring, "~> 1.0", [hex: :libring, repo: "hexpm", optional: false]}], "hexpm"},
-  "uuid": {:hex, :uuid, "1.1.7", "007afd58273bc0bc7f849c3bdc763e2f8124e83b957e515368c498b641f7ab69", [], [], "hexpm"}}
+  "swarm": {:git, "https://github.com/slashdotdash/swarm.git", "753c7cedc0a2f70c7f4a519092c3a406e13e9bb7", [branch: "feature/no_node_available"]},
+  "uuid": {:hex, :uuid, "1.1.8", "e22fc04499de0de3ed1116b770c7737779f226ceefa0badb3592e64d5cfb4eb9", [:mix], [], "hexpm"}}

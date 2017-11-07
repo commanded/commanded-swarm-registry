@@ -1,6 +1,7 @@
 defmodule Commanded.Registration.SwarmRegistry.Monitor do
   @moduledoc """
-  A `GenServer` process that starts and monitors another process that is distributed using Swarm.
+  A `GenServer` process that starts and monitors another process that is
+  distributed using Swarm.
 
   This is used to ensure the process can be supervised by a `Supervisor`.
   """
@@ -15,7 +16,11 @@ defmodule Commanded.Registration.SwarmRegistry.Monitor do
 
   @doc false
   def start_link(name, module, args) do
-    GenServer.start_link(__MODULE__, %Monitor{name: name, module: module, args: args})
+    GenServer.start_link(__MODULE__, %Monitor{
+      name: name,
+      module: module,
+      args: args,
+    })
   end
 
   @doc false
@@ -62,7 +67,7 @@ defmodule Commanded.Registration.SwarmRegistry.Monitor do
           {:error, :no_node_available} ->
             debug(fn -> "[#{inspect Node.self()}] Failed to start distributed process #{inspect name} due to no node available, will attempt to restart in 1s" end)
 
-            attempt_process_restart(1_000)
+            attempt_process_restart()
             {:noreply, state}
 
           {:error, reason} ->
@@ -79,15 +84,35 @@ defmodule Commanded.Registration.SwarmRegistry.Monitor do
   end
 
   @doc """
-  Attempt to restart the monitored process when it goes down
+  Attempt to restart the monitored process when it is shutdown, but requests
+  restart.
   """
-  def handle_info({:DOWN, _ref, :process, _pid, reason}, %Monitor{name: name, ref: ref} = state) do
-    debug(fn -> "[#{Node.self()}] Named process #{inspect name} down due to: #{inspect reason}" end)
+  def handle_info({:DOWN, ref, :process, _pid, {:shutdown, :attempt_restart}}, %Monitor{name: name, ref: ref} = state) do
+    debug(fn -> "[#{Node.self()}] Named process #{inspect name} down due to: :shutdown" end)
 
     Process.demonitor(ref)
-    attempt_process_restart(1_000)
+    attempt_process_restart()
 
     {:noreply, %Monitor{state | pid: nil, ref: nil}}
+  end
+
+  @doc """
+  Stop the monitor when the monitored process is shutdown and requests not
+  to be restarted.
+  """
+  def handle_info({:DOWN, ref, :process, _pid, {:shutdown, :no_restart}}, %Monitor{name: name, ref: ref} = state) do
+    debug(fn -> "[#{Node.self()}] Named process #{inspect name} down due to: :shutdown" end)
+
+    stop(:shutdown, state)
+  end
+
+  @doc """
+  Stop the monitor when the monitored process goes down for any other reason.
+  """
+  def handle_info({:DOWN, ref, :process, _pid, reason}, %Monitor{name: name, ref: ref} = state) do
+    debug(fn -> "[#{Node.self()}] Named process #{inspect name} down due to: #{inspect reason}" end)
+
+    stop(reason, state)
   end
 
   @doc """
@@ -99,7 +124,13 @@ defmodule Commanded.Registration.SwarmRegistry.Monitor do
     {:noreply, state}
   end
 
-  defp attempt_process_restart(delay) do
+  defp stop(reason, %Monitor{ref: ref} = state) do
+    Process.demonitor(ref)
+
+    {:stop, reason, %Monitor{state | pid: nil, ref: nil}}
+  end
+
+  defp attempt_process_restart(delay \\ restart_delay()) do
     Process.send_after(self(), :start_distributed_process, delay)
   end
 
@@ -108,6 +139,9 @@ defmodule Commanded.Registration.SwarmRegistry.Monitor do
 
     {:noreply, %Monitor{state | pid: pid, ref: ref}}
   end
+
+  defp restart_delay,
+    do: Application.get_env(:commanded_swarm_registry, :restart_delay, 1_000)
 
   defdelegate debug(chardata_or_fun), to: Logger
   defdelegate info(chardata_or_fun), to: Logger

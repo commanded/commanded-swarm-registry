@@ -5,3 +5,15 @@ elixir:
 
 otp_release:
   - 20.1
+
+services:
+  - postgresql
+
+before_script:
+  - MIX_ENV=test mix do event_store.create, event_store.init
+
+sudo: required
+dist: trusty
+
+addons:
+  postgresql: "9.6"

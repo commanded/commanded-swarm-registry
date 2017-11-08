@@ -7,7 +7,7 @@ defmodule Commanded.Registration.SwarmRegistry.Mixfile do
     [
       app: :commanded_swarm_registry,
       version: @version,
-      elixir: "~> 1.4",
+      elixir: "~> 1.5",
       elixirc_paths: elixirc_paths(Mix.env),
       start_permanent: Mix.env == :prod,
       deps: deps(),
@@ -29,11 +29,12 @@ defmodule Commanded.Registration.SwarmRegistry.Mixfile do
 
   defp deps do
     [
-      {:commanded, path: "deps/commanded", runtime: Mix.env == :test, override: true},
-      {:commanded_eventstore_adapter, "~> 0.2.0", only: :test},
-      {:eventstore, path: "~/src/eventstore", only: :test, override: true},
-      {:ex_doc, "~> 0.15", only: :dev},
-      {:swarm, path: "~/src/swarm", override: true},
+      {:commanded, ">= 0.15.0", runtime: Mix.env == :test},
+      {:commanded_eventstore_adapter, ">= 0.3.0", only: :test},
+      {:eventstore, ">= 0.13.0", only: :test},
+      {:ex_doc, "~> 0.18", only: :dev},
+      {:mix_test_watch, "~> 0.5", only: :dev},
+      {:swarm, "~> 3.0"},
     ]
   end
 

@@ -140,8 +140,9 @@ defmodule Commanded.Registration.SwarmRegistry.Monitor do
     {:noreply, %Monitor{state | pid: pid, ref: ref}}
   end
 
-  defp restart_delay,
-    do: Application.get_env(:commanded_swarm_registry, :restart_delay, 1_000)
+  defp restart_delay do
+    Application.get_env(:commanded_swarm_registry, :restart_delay, 1_000)
+  end
 
   defdelegate debug(chardata_or_fun), to: Logger
   defdelegate info(chardata_or_fun), to: Logger

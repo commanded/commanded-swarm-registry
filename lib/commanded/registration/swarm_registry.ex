@@ -47,6 +47,20 @@ defmodule Commanded.Registration.SwarmRegistry do
   def start_link(name, module, args), do: Monitor.start_link(name, module, args)
 
   @doc """
+  Sends a message to the given dest running on the current node and each
+  connected node, returning `:ok`.
+  """
+  @callback multi_send(dest :: atom(), message :: any()) :: :ok
+  @impl Commanded.Registration
+  def multi_send(dest, message) do
+    for node <- nodes() do
+      Process.send({dest, node}, message, [:noconnect])
+    end
+
+    :ok
+  end
+
+  @doc """
   Get the pid of a registered name.
   """
   @spec whereis_name(name :: term) :: pid | :undefined
@@ -66,9 +80,9 @@ defmodule Commanded.Registration.SwarmRegistry do
 
   @doc false
   def handle_call({:swarm, :begin_handoff}, _from, state) do
-    # Shutdown the process when a cluster toplogy change indicates it is now
-    # running on the wrong host. This is to prevent a spike in process restarts as
-    # they are moved. Instead, allow the process to be started on request.
+    # Stop the process when a cluster toplogy change indicates it is now running
+    # on the wrong host. This is to prevent a spike in process restarts as they
+    # are moved. Instead, allow the process to be started on request.
     {:stop, {:shutdown, :no_restart}, :ignore, state}
   end
 
@@ -94,7 +108,8 @@ defmodule Commanded.Registration.SwarmRegistry do
 
   @doc false
   def handle_info({:swarm, :die}, state) do
-    # Stop the process as there are not currently enough nodes running to host it
+    # Stop the process as there are not currently enough nodes running to host
+    # it, but attempt to restart it when a node becomes available
     {:stop, {:shutdown, :attempt_restart}, state}
   end
 
@@ -102,6 +117,8 @@ defmodule Commanded.Registration.SwarmRegistry do
   def handle_info(_msg, state) do
     {:noreply, state}
   end
+
+  defp nodes, do: [Node.self() | Node.list()]
 
   defp proc do
     case Process.info(self(), :registered_name) do

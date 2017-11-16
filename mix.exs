@@ -34,7 +34,7 @@ defmodule Commanded.Registration.SwarmRegistry.Mixfile do
       {:eventstore, ">= 0.13.0", only: :test},
       {:ex_doc, "~> 0.18", only: :dev},
       {:mix_test_watch, "~> 0.5", only: :dev},
-      {:swarm, "~> 3.0"},
+      {:swarm, "~> 3.1"},
     ]
   end
 

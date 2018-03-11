@@ -13,6 +13,7 @@ MIT License
 ### Overview
 
 - [Getting started](guides/Getting%20Started.md)
+- [Cluster deployment](guides/Cluster.md)
 - [Contributing](#contributing)
 - [Need help?](#need-help)
 

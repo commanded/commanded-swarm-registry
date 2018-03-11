@@ -47,7 +47,9 @@ defmodule Commanded.Registration.SwarmRegistry.Monitor do
   @doc """
   Start a process using Swarm to distribute it amongst the available nodes in the cluster
   """
-  def handle_info(:start_distributed_process, %Monitor{name: name, module: module, args: args} = state) do
+  def handle_info(:start_distributed_process, %Monitor{} = state) do
+    %Monitor{name: name, module: module, args: args} = state
+    
     debug(fn -> "[#{Node.self()}] Attempting to start distributed process: #{inspect name} (#{inspect module} with args #{inspect args})" end)
 
     case Swarm.whereis_name(name) do

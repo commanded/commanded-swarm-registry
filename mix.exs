@@ -20,21 +20,20 @@ defmodule Commanded.Registration.SwarmRegistry.Mixfile do
 
   def application do
     [
-      extra_applications: extra_applications(Mix.env())
+      extra_applications: [:logger]
     ]
   end
 
-  defp extra_applications(:test), do: [:logger, :eventstore]
-  defp extra_applications(_), do: [:logger]
-
   defp deps do
     [
-      {:commanded, ">= 0.15.0", runtime: Mix.env() == :test},
-      {:commanded_eventstore_adapter, ">= 0.3.0", only: :test},
-      {:eventstore, ">= 0.13.0", only: :test},
+      # {:commanded, ">= 0.16.0-rc.0", runtime: Mix.env() == :test},
+      {:commanded, github: "commanded/commanded", runtime: Mix.env() == :test},
+      {:swarm, "~> 3.3"},
+
+      # build & test tools
       {:ex_doc, "~> 0.18", only: :dev},
       {:mix_test_watch, "~> 0.5", only: :dev},
-      {:swarm, "~> 3.3"}
+      {:mox, "~> 0.3", only: :test}
     ]
   end
 
@@ -43,14 +42,6 @@ defmodule Commanded.Registration.SwarmRegistry.Mixfile do
     Distributed process registry for Commanded using Swarm
     """
   end
-
-  @commanded_elixirc_paths [
-    "deps/commanded/test/aggregates/support",
-    "deps/commanded/test/commands/support",
-    "deps/commanded/test/event/support",
-    "deps/commanded/test/example_domain",
-    "deps/commanded/test/process_managers/support"
-  ]
 
   defp docs do
     [
@@ -65,7 +56,15 @@ defmodule Commanded.Registration.SwarmRegistry.Mixfile do
     ]
   end
 
-  defp elixirc_paths(:test), do: ["lib", "test/support"] ++ @commanded_elixirc_paths
+  defp elixirc_paths(:test) do
+    [
+      "lib",
+      "test/support",
+      "deps/commanded/test/registration/support",
+      "deps/commanded/test/helpers"
+    ]
+  end
+
   defp elixirc_paths(_), do: ["lib"]
 
   defp package do

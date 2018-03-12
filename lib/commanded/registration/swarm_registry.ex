@@ -21,7 +21,8 @@ defmodule Commanded.Registration.SwarmRegistry do
 
   Registers the pid with the given name.
   """
-  @spec start_child(name :: term(), supervisor :: module(), args :: [any()]) :: {:ok, pid()} | {:error, reason :: term()}
+  @spec start_child(name :: term(), supervisor :: module(), args :: [any()]) ::
+          {:ok, pid} | {:error, term}
   @impl Commanded.Registration
   def start_child(name, supervisor, args) do
     case whereis_name(name) do
@@ -32,7 +33,6 @@ defmodule Commanded.Registration.SwarmRegistry do
         end
 
       pid ->
-        Process.link(pid)
         {:ok, pid}
     end
   end
@@ -42,23 +42,10 @@ defmodule Commanded.Registration.SwarmRegistry do
 
   Registers the pid with the given name.
   """
-  @spec start_link(name :: term(), module :: module(), args :: [any()]) :: {:ok, pid()} | {:error, reason :: term()}
+  @spec start_link(name :: term(), module :: module(), args :: [any()]) ::
+          {:ok, pid} | {:error, term}
   @impl Commanded.Registration
   def start_link(name, module, args), do: Monitor.start_link(name, module, args)
-
-  @doc """
-  Sends a message to the given dest running on the current node and each
-  connected node, returning `:ok`.
-  """
-  @callback multi_send(dest :: atom(), message :: any()) :: :ok
-  @impl Commanded.Registration
-  def multi_send(dest, message) do
-    for node <- nodes() do
-      Process.send({dest, node}, message, [:noconnect])
-    end
-
-    :ok
-  end
 
   @doc """
   Get the pid of a registered name.
@@ -88,7 +75,7 @@ defmodule Commanded.Registration.SwarmRegistry do
 
   @doc false
   def handle_call(_request, _from, _state) do
-    raise "attempted to call GenServer #{inspect proc()} but no handle_call/3 clause was provided"
+    raise "attempted to call GenServer #{inspect(proc())} but no handle_call/3 clause was provided"
   end
 
   @doc false
@@ -103,7 +90,7 @@ defmodule Commanded.Registration.SwarmRegistry do
 
   @doc false
   def handle_cast(_request, _state) do
-    raise "attempted to cast GenServer #{inspect proc()} but no handle_cast/2 clause was provided"
+    raise "attempted to cast GenServer #{inspect(proc())} but no handle_cast/2 clause was provided"
   end
 
   @doc false
@@ -118,11 +105,9 @@ defmodule Commanded.Registration.SwarmRegistry do
     {:noreply, state}
   end
 
-  defp nodes, do: [Node.self() | Node.list()]
-
   defp proc do
     case Process.info(self(), :registered_name) do
-      {_, []}   -> self()
+      {_, []} -> self()
       {_, name} -> name
     end
   end

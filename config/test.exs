@@ -9,20 +9,7 @@ config :ex_unit,
 
 config :commanded,
   assert_receive_event_timeout: 2_000,
-  event_store_adapter: Commanded.EventStore.Adapters.EventStore,
-  reset_storage: &Commanded.Storage.reset!/0,
   registry: Commanded.Registration.SwarmRegistry
-
-config :eventstore,
-  registry: :distributed
-
-config :eventstore, EventStore.Storage,
-  serializer: Commanded.Serialization.JsonSerializer,
-  username: "postgres",
-  password: "postgres",
-  database: "eventstore_test",
-  hostname: "localhost",
-  pool_size: 1
 
 config :swarm,
   nodes: [:"node1@127.0.0.1", :"node2@127.0.0.1"],

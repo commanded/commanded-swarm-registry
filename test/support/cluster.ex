@@ -74,6 +74,8 @@ defmodule Commanded.Cluster do
     for {app_name, _, _} <- Application.loaded_applications() do
       rpc(node, Application, :ensure_all_started, [app_name])
     end
+    rpc(node, Commanded.Registration.RegisteredSupervisor, :start_link, [])
+    rpc(node, Commanded.Registration.SwarmRegistry.ExampleSupervisor, :start_link, [])
   end
 
   defp node_name(node_host) do

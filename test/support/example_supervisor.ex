@@ -1,16 +1,15 @@
 defmodule Commanded.Registration.SwarmRegistry.ExampleSupervisor do
   use Supervisor
 
-  alias Commanded.Registration.SwarmRegistry.{AppendingEventHandler,CountEventHandler}
+  alias Commanded.Registration.SupervisedServer
 
   def start_link do
-    Supervisor.start_link(__MODULE__, [], name: __MODULE__)
+    Supervisor.start_link(__MODULE__, :ok, name: __MODULE__)
   end
 
-  def init(_arg) do
+  def init(:ok) do
     children = [
-      {AppendingEventHandler, []},
-      {CountEventHandler, []},
+      {SupervisedServer, []}
     ]
 
     Supervisor.init(children, strategy: :one_for_one)

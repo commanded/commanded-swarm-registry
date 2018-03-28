@@ -49,7 +49,7 @@ defmodule Commanded.Registration.SwarmRegistry.Monitor do
   """
   def handle_info(:start_distributed_process, %Monitor{} = state) do
     %Monitor{name: name, module: module, args: args} = state
-    
+
     debug(fn -> "[#{Node.self()}] Attempting to start distributed process: #{inspect name} (#{inspect module} with args #{inspect args})" end)
 
     case Swarm.whereis_name(name) do
@@ -87,10 +87,11 @@ defmodule Commanded.Registration.SwarmRegistry.Monitor do
 
   @doc """
   Attempt to restart the monitored process when it is shutdown, but requests
-  restart.
+  restart, or due to `:noconnection` or `:noproc`.
   """
-  def handle_info({:DOWN, ref, :process, _pid, {:shutdown, :attempt_restart}}, %Monitor{name: name, ref: ref} = state) do
-    debug(fn -> "[#{Node.self()}] Named process #{inspect name} down due to: :shutdown" end)
+  def handle_info({:DOWN, ref, :process, _pid, reason}, %Monitor{name: name, ref: ref} = state)
+    when reason in [:noconnection, :noproc, :shutdown, {:shutdown, :attempt_restart}] do
+    debug(fn -> "[#{Node.self()}] Named process #{inspect name} down due to: #{inspect reason}" end)
 
     Process.demonitor(ref)
     attempt_process_restart()
@@ -103,7 +104,7 @@ defmodule Commanded.Registration.SwarmRegistry.Monitor do
   to be restarted.
   """
   def handle_info({:DOWN, ref, :process, _pid, {:shutdown, :no_restart}}, %Monitor{name: name, ref: ref} = state) do
-    debug(fn -> "[#{Node.self()}] Named process #{inspect name} down due to: :shutdown" end)
+    debug(fn -> "[#{Node.self()}] Named process #{inspect name} down due to: {:shutdown, :no_restart}" end)
 
     stop(:shutdown, state)
   end

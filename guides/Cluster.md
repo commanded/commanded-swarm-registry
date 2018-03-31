@@ -48,6 +48,4 @@ The Erlang equivalent of the `:kernerl` mix config, as above, is:
       $ MIX_ENV=test iex --name node3@127.0.0.1 --erl "-config cluster/node3.sys.config" -S mix
       ```
 
-The node specific `<node>.sys.config` files ensure the cluster is formed before starting the `:eventstore` application, assuming this occurs within the 30 seconds timeout.
-
-Once the cluster has formed, you can use the EventStore API from any node. Stream processes will be distributed amongst the cluster and moved around on node up/down.
+The node specific `<node>.sys.config` files ensure the cluster is formed before starting the application, assuming this occurs within the 30 seconds timeout.

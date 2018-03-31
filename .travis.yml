@@ -10,7 +10,6 @@ services:
   - postgresql
 
 before_script:
-  - MIX_ENV=test mix do event_store.create, event_store.init
   - epmd -daemon
 
 sudo: required

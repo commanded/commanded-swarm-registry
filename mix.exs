@@ -26,8 +26,7 @@ defmodule Commanded.Registration.SwarmRegistry.Mixfile do
 
   defp deps do
     [
-      # {:commanded, ">= 0.16.0-rc.0", runtime: Mix.env() == :test},
-      {:commanded, github: "commanded/commanded", runtime: Mix.env() == :test},
+      {:commanded, ">= 0.16.0-rc.1", runtime: Mix.env() == :test},
       {:swarm, "~> 3.3"},
 
       # build & test tools
@@ -61,7 +60,6 @@ defmodule Commanded.Registration.SwarmRegistry.Mixfile do
       "lib",
       "test/support",
       "deps/commanded/test/registration/support",
-      "deps/commanded/test/helpers"
     ]
   end
 

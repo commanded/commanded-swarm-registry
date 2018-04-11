@@ -25,15 +25,9 @@ defmodule Commanded.Registration.SwarmRegistry do
           {:ok, pid} | {:error, term}
   @impl Commanded.Registration
   def start_child(name, supervisor, args) do
-    case whereis_name(name) do
-      :undefined ->
-        case Swarm.register_name(name, Supervisor, :start_child, [supervisor, args]) do
-          {:error, {:already_registered, pid}} -> {:error, {:already_started, pid}}
-          reply -> reply
-        end
-
-      pid ->
-        {:ok, pid}
+    case Swarm.register_name(name, Supervisor, :start_child, [supervisor, args]) do
+      {:error, {:already_registered, pid}} -> {:error, {:already_started, pid}}
+      reply -> reply
     end
   end
 

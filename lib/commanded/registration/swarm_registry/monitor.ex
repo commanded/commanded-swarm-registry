@@ -52,36 +52,28 @@ defmodule Commanded.Registration.SwarmRegistry.Monitor do
 
     debug(fn -> "[#{Node.self()}] Attempting to start distributed process: #{inspect name} (#{inspect module} with args #{inspect args})" end)
 
-    case Swarm.whereis_name(name) do
-      :undefined ->
-        case Swarm.register_name(name, GenServer, :start_link, [module, args]) do
-          {:ok, pid} ->
-            debug(fn -> "[#{inspect Node.self()}] Started named process #{inspect name} on #{inspect node(pid)} (#{inspect pid})" end)
+    case Swarm.register_name(name, GenServer, :start_link, [module, args]) do
+      {:ok, pid} ->
+        debug(fn -> "[#{inspect Node.self()}] Started named process #{inspect name} on #{inspect node(pid)} (#{inspect pid})" end)
 
-            Process.unlink(pid)
-            monitor(pid, state)
+        Process.unlink(pid)
+        monitor(pid, state)
 
-          {:error, {:already_registered, pid}} ->
-            debug(fn -> "[#{inspect Node.self()}] Named process #{inspect name} already started on #{inspect node(pid)} (#{inspect pid})" end)
-
-            monitor(pid, state)
-
-          {:error, :no_node_available} ->
-            debug(fn -> "[#{inspect Node.self()}] Failed to start distributed process #{inspect name} due to no node available, will attempt to restart in 1s" end)
-
-            attempt_process_restart()
-            {:noreply, state}
-
-          {:error, reason} ->
-            info(fn -> "[#{inspect Node.self()}] Failed to start distributed process #{inspect name} due to: #{inspect reason}" end)
-
-            {:stop, reason, state}
-        end
-
-      pid ->
+      {:error, {:already_registered, pid}} ->
         debug(fn -> "[#{inspect Node.self()}] Named process #{inspect name} already started on #{inspect node(pid)} (#{inspect pid})" end)
 
         monitor(pid, state)
+
+      {:error, :no_node_available} ->
+        debug(fn -> "[#{inspect Node.self()}] Failed to start distributed process #{inspect name} due to no node available, will attempt to restart in 1s" end)
+
+        attempt_process_restart()
+        {:noreply, state}
+
+      {:error, reason} ->
+        info(fn -> "[#{inspect Node.self()}] Failed to start distributed process #{inspect name} due to: #{inspect reason}" end)
+
+        {:stop, reason, state}
     end
   end
 

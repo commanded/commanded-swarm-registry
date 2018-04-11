@@ -1,5 +1,5 @@
 %{
-  "commanded": {:hex, :commanded, "0.16.0-rc.1", "8d1a524894a7170bc8b07b58a119aa640603217edee296cef27a4e90d5322b8c", [:mix], [{:phoenix_pubsub, "~> 1.0", [hex: :phoenix_pubsub, repo: "hexpm", optional: true]}, {:poison, "~> 3.1", [hex: :poison, repo: "hexpm", optional: false]}, {:uuid, "~> 1.1", [hex: :uuid, repo: "hexpm", optional: false]}], "hexpm"},
+  "commanded": {:hex, :commanded, "0.16.0", "10ab39952faf4af8bc0b077cce870f343e5e695b1e8cced4f425db66f651b048", [:mix], [{:phoenix_pubsub, "~> 1.0", [hex: :phoenix_pubsub, repo: "hexpm", optional: true]}, {:poison, "~> 3.1", [hex: :poison, repo: "hexpm", optional: false]}, {:uuid, "~> 1.1", [hex: :uuid, repo: "hexpm", optional: false]}], "hexpm"},
   "earmark": {:hex, :earmark, "1.2.4", "99b637c62a4d65a20a9fb674b8cffb8baa771c04605a80c911c4418c69b75439", [:mix], [], "hexpm"},
   "ex_doc": {:hex, :ex_doc, "0.18.3", "f4b0e4a2ec6f333dccf761838a4b253d75e11f714b85ae271c9ae361367897b7", [:mix], [{:earmark, "~> 1.1", [hex: :earmark, repo: "hexpm", optional: false]}], "hexpm"},
   "file_system": {:hex, :file_system, "0.2.4", "f0bdda195c0e46e987333e986452ec523aed21d784189144f647c43eaf307064", [:mix], [], "hexpm"},

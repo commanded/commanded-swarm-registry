@@ -6,7 +6,7 @@ Supports running [Commanded](https://github.com/slashdotdash/commanded) on a clu
 
 MIT License
 
-[![Build Status](https://travis-ci.org/commanded/commanded-swarm-registry.svg?branch=master)](https://travis-ci.org/commanded/commanded-swarm-registry)
+[![Build Status](https://travis-ci.com/commanded/commanded-swarm-registry.svg?branch=master)](https://travis-ci.com/commanded/commanded-swarm-registry)
 
 ---
 

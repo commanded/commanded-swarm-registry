@@ -16,17 +16,42 @@ defmodule Commanded.Registration.SwarmRegistry do
   def child_spec, do: []
 
   @doc """
+  Starts a supervisor.
+  """
+  @spec supervisor_child_spec(module :: atom, arg :: any()) :: :supervisor.child_spec()
+  @impl Commanded.Registration
+  def supervisor_child_spec(module, arg) do
+    default = %{
+      id: module,
+      start: {module, :start_link, [arg]},
+      type: :supervisor
+    }
+
+    Supervisor.child_spec(default, [])
+  end
+
+  @doc """
   Starts a uniquely named child process of a supervisor using the given module
   and args.
 
   Registers the pid with the given name.
   """
-  @spec start_child(name :: term(), supervisor :: module(), args :: [any()]) ::
+  @spec start_child(
+          name :: term(),
+          supervisor :: module(),
+          child_spec :: Commanded.Registration.start_child_arg()
+        ) ::
           {:ok, pid} | {:error, term}
   @impl Commanded.Registration
-  def start_child(name, supervisor, args) do
-    case Swarm.register_name(name, Supervisor, :start_child, [supervisor, args]) do
-      {:error, {:already_registered, pid}} -> {:error, {:already_started, pid}}
+  def start_child(name, supervisor, child_spec) do
+    args =
+      case child_spec do
+        module when is_atom(module) -> [supervisor, {module, []}]
+        {module, args} when is_atom(module) and is_list(args) -> [supervisor, {module, args}]
+      end
+
+    case Swarm.register_name(name, DynamicSupervisor, :start_child, args) do
+      {:error, {:already_registered, pid}} -> {:ok, pid}
       reply -> reply
     end
   end

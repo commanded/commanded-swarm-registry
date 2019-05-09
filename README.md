@@ -12,6 +12,7 @@ MIT License
 
 ### Overview
 
+- [Changelog](CHANGELOG.md)
 - [Getting started](guides/Getting%20Started.md)
 - [Cluster deployment](guides/Cluster.md)
 - [Contributing](#contributing)

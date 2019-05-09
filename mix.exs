@@ -26,14 +26,12 @@ defmodule Commanded.Registration.SwarmRegistry.Mixfile do
 
   defp deps do
     [
-      {:commanded, ">= 0.16.0", runtime: Mix.env() == :test},
-      {:jason, "~> 1.1", optional: true},
-      {:swarm, "~> 3.3"},
+      {:commanded, ">= 0.19.0", runtime: Mix.env() == :test},
+      {:swarm, "~> 3.4"},
 
       # build & test tools
-      {:ex_doc, "~> 0.18", only: :dev},
-      {:mix_test_watch, "~> 0.5", only: :dev},
-      {:mox, "~> 0.3", only: :test}
+      {:ex_doc, "~> 0.20", only: :dev},
+      {:mox, "~> 0.5", only: :test}
     ]
   end
 

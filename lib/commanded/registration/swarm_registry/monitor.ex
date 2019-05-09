@@ -19,7 +19,7 @@ defmodule Commanded.Registration.SwarmRegistry.Monitor do
     GenServer.start_link(__MODULE__, %Monitor{
       name: name,
       module: module,
-      args: args,
+      args: args
     })
   end
 
@@ -50,28 +50,46 @@ defmodule Commanded.Registration.SwarmRegistry.Monitor do
   def handle_info(:start_distributed_process, %Monitor{} = state) do
     %Monitor{name: name, module: module, args: args} = state
 
-    debug(fn -> "[#{Node.self()}] Attempting to start distributed process: #{inspect name} (#{inspect module} with args #{inspect args})" end)
+    debug(fn ->
+      "[#{Node.self()}] Attempting to start distributed process: #{inspect(name)} (#{
+        inspect(module)
+      } with args #{inspect(args)})"
+    end)
 
     case Swarm.register_name(name, GenServer, :start_link, [module, args]) do
       {:ok, pid} ->
-        debug(fn -> "[#{inspect Node.self()}] Started named process #{inspect name} on #{inspect node(pid)} (#{inspect pid})" end)
+        debug(fn ->
+          "[#{inspect(Node.self())}] Started named process #{inspect(name)} on #{
+            inspect(node(pid))
+          } (#{inspect(pid)})"
+        end)
 
         Process.unlink(pid)
         monitor(pid, state)
 
       {:error, {:already_registered, pid}} ->
-        debug(fn -> "[#{inspect Node.self()}] Named process #{inspect name} already started on #{inspect node(pid)} (#{inspect pid})" end)
+        debug(fn ->
+          "[#{inspect(Node.self())}] Named process #{inspect(name)} already started on #{
+            inspect(node(pid))
+          } (#{inspect(pid)})"
+        end)
 
         monitor(pid, state)
 
       {:error, :no_node_available} ->
-        debug(fn -> "[#{inspect Node.self()}] Failed to start distributed process #{inspect name} due to no node available, will attempt to restart in 1s" end)
+        debug(fn ->
+          "[#{inspect(Node.self())}] Failed to start distributed process #{inspect(name)} due to no node available, will attempt to restart in 1s"
+        end)
 
         attempt_process_restart()
         {:noreply, state}
 
       {:error, reason} ->
-        info(fn -> "[#{inspect Node.self()}] Failed to start distributed process #{inspect name} due to: #{inspect reason}" end)
+        info(fn ->
+          "[#{inspect(Node.self())}] Failed to start distributed process #{inspect(name)} due to: #{
+            inspect(reason)
+          }"
+        end)
 
         {:stop, reason, state}
     end
@@ -82,8 +100,10 @@ defmodule Commanded.Registration.SwarmRegistry.Monitor do
   restart, or due to `:noconnection` or `:noproc`.
   """
   def handle_info({:DOWN, ref, :process, _pid, reason}, %Monitor{name: name, ref: ref} = state)
-    when reason in [:noconnection, :noproc, :shutdown, {:shutdown, :attempt_restart}] do
-    debug(fn -> "[#{Node.self()}] Named process #{inspect name} down due to: #{inspect reason}" end)
+      when reason in [:noconnection, :noproc, :shutdown, {:shutdown, :attempt_restart}] do
+    debug(fn ->
+      "[#{Node.self()}] Named process #{inspect(name)} down due to: #{inspect(reason)}"
+    end)
 
     Process.demonitor(ref)
     attempt_process_restart()
@@ -95,8 +115,13 @@ defmodule Commanded.Registration.SwarmRegistry.Monitor do
   Stop the monitor when the monitored process is shutdown and requests not
   to be restarted.
   """
-  def handle_info({:DOWN, ref, :process, _pid, {:shutdown, :no_restart}}, %Monitor{name: name, ref: ref} = state) do
-    debug(fn -> "[#{Node.self()}] Named process #{inspect name} down due to: {:shutdown, :no_restart}" end)
+  def handle_info(
+        {:DOWN, ref, :process, _pid, {:shutdown, :no_restart}},
+        %Monitor{name: name, ref: ref} = state
+      ) do
+    debug(fn ->
+      "[#{Node.self()}] Named process #{inspect(name)} down due to: {:shutdown, :no_restart}"
+    end)
 
     stop(:shutdown, state)
   end
@@ -105,7 +130,9 @@ defmodule Commanded.Registration.SwarmRegistry.Monitor do
   Stop the monitor when the monitored process goes down for any other reason.
   """
   def handle_info({:DOWN, ref, :process, _pid, reason}, %Monitor{name: name, ref: ref} = state) do
-    debug(fn -> "[#{Node.self()}] Named process #{inspect name} down due to: #{inspect reason}" end)
+    debug(fn ->
+      "[#{Node.self()}] Named process #{inspect(name)} down due to: #{inspect(reason)}"
+    end)
 
     stop(reason, state)
   end

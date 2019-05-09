@@ -5,6 +5,15 @@ defmodule Commanded.RegistrationTest do
   alias Commanded.Helpers.{ProcessHelper, Wait}
   alias Commanded.Registration.{RegisteredServer, RegisteredSupervisor}
 
+  setup_all do
+    Wait.until(fn ->
+      case RegisteredSupervisor.start_child("startup") do
+        {:ok, pid} when is_pid(pid) -> :ok
+        {:error, :no_node_available} -> flunk("no node available")
+      end
+    end)
+  end
+
   describe "`start_child/3`" do
     setup do
       on_exit(fn ->
@@ -61,8 +70,8 @@ defmodule Commanded.RegistrationTest do
     end
 
     test "should return PID when child registered" do
-      assert {:ok, pid} = RegisteredSupervisor.start_child("child")
-      assert Registration.whereis_name("child") == pid
+      assert {:ok, pid} = RegisteredSupervisor.start_child("exists")
+      assert Registration.whereis_name("exists") == pid
     end
 
     test "should return PID when process registered" do

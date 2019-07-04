@@ -1,6 +1,6 @@
 # Changelog
 
-## Next release
+## v0.3.0
 
 - Support Commanded v0.19 which includes a change to the `Commanded.Registration` behaviour.
 

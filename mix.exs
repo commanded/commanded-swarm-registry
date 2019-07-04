@@ -1,7 +1,7 @@
 defmodule Commanded.Registration.SwarmRegistry.Mixfile do
   use Mix.Project
 
-  @version "0.2.0"
+  @version "0.3.0"
 
   def project do
     [
@@ -29,7 +29,7 @@ defmodule Commanded.Registration.SwarmRegistry.Mixfile do
       {:commanded, ">= 0.19.0", runtime: Mix.env() == :test},
       {:swarm, "~> 3.4"},
 
-      # build & test tools
+      # Build & test tools
       {:ex_doc, "~> 0.20", only: :dev},
       {:mox, "~> 0.5", only: :test}
     ]
@@ -71,8 +71,7 @@ defmodule Commanded.Registration.SwarmRegistry.Mixfile do
       maintainers: ["Ben Smith"],
       licenses: ["MIT"],
       links: %{
-        "GitHub" => "https://github.com/commanded/commanded-swarm-registry",
-        "Docs" => "https://hexdocs.pm/commanded_swarm_registry/"
+        "GitHub" => "https://github.com/commanded/commanded-swarm-registry"
       }
     ]
   end

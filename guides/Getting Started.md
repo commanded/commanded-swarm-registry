@@ -6,19 +6,18 @@ Commanded Swarm registry can be installed from hex as follows.
 
     ```elixir
     def deps do
-      [{:commanded_swarm_registry, "~> 0.1"}]
+      [{:commanded_swarm_registry, "~> 0.3"}]
     end
     ```
 
 2. Fetch mix dependencies:
 
     ```console
-    $ mix deps.get
+    mix deps.get
     ```
 
 3. Configure your Commanded application to use the Swarm registry (e.g. `config/config.exs`):
 
     ```elixir
-    config :commanded,
-      registry: Commanded.Registration.SwarmRegistry
+    config :commanded, registry: Commanded.Registration.SwarmRegistry
     ```

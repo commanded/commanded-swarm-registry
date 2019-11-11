@@ -1,7 +1,7 @@
 defmodule Commanded.Registration.SwarmRegistry.Mixfile do
   use Mix.Project
 
-  @version "0.3.0"
+  @version "1.0.0-rc.0"
 
   def project do
     [
@@ -26,11 +26,11 @@ defmodule Commanded.Registration.SwarmRegistry.Mixfile do
 
   defp deps do
     [
-      {:commanded, ">= 0.19.0", runtime: Mix.env() == :test},
+      {:commanded, github: "commanded/commanded", runtime: Mix.env() == :test},
       {:swarm, "~> 3.4"},
 
       # Build & test tools
-      {:ex_doc, "~> 0.20", only: :dev},
+      {:ex_doc, "~> 0.21", only: :dev},
       {:mox, "~> 0.5", only: :test}
     ]
   end

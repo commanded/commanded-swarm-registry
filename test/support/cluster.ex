@@ -76,8 +76,9 @@ defmodule Commanded.Cluster do
       rpc(node, Application, :ensure_all_started, [app_name])
     end
 
-    rpc(node, Commanded.Registration.RegisteredSupervisor, :start_link, [])
-    rpc(node, Commanded.Registration.SwarmRegistry.ExampleSupervisor, :start_link, [])
+    rpc(node, Commanded.Registration.RegisteredSupervisor, :start_link, [:ok])
+    rpc(node, Commanded.Registration.SwarmRegistry.ExampleSupervisor, :start_link, [:ok])
+    rpc(node, Commanded.SwarmApp, :start_link, [])
   end
 
   defp node_name(node_host) do

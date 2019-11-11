@@ -3,11 +3,11 @@ defmodule Commanded.Registration.SwarmRegistry.ExampleSupervisor do
 
   alias Commanded.Registration.SupervisedServer
 
-  def start_link do
-    Supervisor.start_link(__MODULE__, :ok, name: __MODULE__)
+  def start_link(arg) do
+    Supervisor.start_link(__MODULE__, arg, name: __MODULE__)
   end
 
-  def init(:ok) do
+  def init(_arg) do
     children = [
       {SupervisedServer, []}
     ]

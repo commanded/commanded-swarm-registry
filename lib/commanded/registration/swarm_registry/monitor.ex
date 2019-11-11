@@ -16,11 +16,9 @@ defmodule Commanded.Registration.SwarmRegistry.Monitor do
 
   @doc false
   def start_link(name, module, args) do
-    GenServer.start_link(__MODULE__, %Monitor{
-      name: name,
-      module: module,
-      args: args
-    })
+    state = %Monitor{name: name, module: module, args: args}
+
+    GenServer.start_link(__MODULE__, state)
   end
 
   @doc false

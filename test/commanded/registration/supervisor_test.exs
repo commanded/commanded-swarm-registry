@@ -1,22 +1,31 @@
 defmodule Commanded.Registration.SupervisorTest do
   use ExUnit.Case
 
+  alias Commanded.Helpers.Wait
   alias Commanded.Registration
-  alias Commanded.Helpers.{ProcessHelper, Wait}
+  alias Commanded.Registration.SwarmRegistry.ExampleSupervisor
+  alias Commanded.SwarmApp
 
-  test "should restart supervised process on process shutdown" do
-    Wait.until(fn ->
-      refute Registration.whereis_name("supervisedchild") == :undefined
+  setup_all do
+    start_supervised!(SwarmApp)
+    start_supervised!(ExampleSupervisor)
+
+    Wait.until(1_000, fn ->
+      refute Registration.whereis_name(SwarmApp, "supervisedchild") == :undefined
     end)
 
-    pid = Registration.whereis_name("supervisedchild")
+    :ok
+  end
+
+  test "should restart supervised process on process shutdown" do
+    pid = Registration.whereis_name(SwarmApp, "supervisedchild")
 
     # Shutdown supervised registered process
     shutdown(pid)
 
     # Process should be restarted by supervisor
     Wait.until(fn ->
-      refute Registration.whereis_name("supervisedchild") == :undefined
+      refute Registration.whereis_name(SwarmApp, "supervisedchild") == :undefined
     end)
   end
 

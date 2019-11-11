@@ -4,23 +4,21 @@ defmodule Commanded.Registration.SwarmRegistry do
   [Swarm](https://github.com/bitwalker/swarm).
   """
 
-  @behaviour Commanded.Registration
+  @behaviour Commanded.Registration.Adapter
 
   alias Commanded.Registration.SwarmRegistry.Monitor
 
   @doc """
   Return an optional supervisor spec for the registry
   """
-  @spec child_spec() :: [:supervisor.child_spec()]
-  @impl Commanded.Registration
-  def child_spec, do: []
+  @impl Commanded.Registration.Adapter
+  def child_spec(_application, _config), do: {:ok, [], %{}}
 
   @doc """
   Starts a supervisor.
   """
-  @spec supervisor_child_spec(module :: atom, arg :: any()) :: :supervisor.child_spec()
-  @impl Commanded.Registration
-  def supervisor_child_spec(module, arg) do
+  @impl Commanded.Registration.Adapter
+  def supervisor_child_spec(_adapter_meta, module, arg) do
     default = %{
       id: module,
       start: {module, :start_link, [arg]},
@@ -36,14 +34,8 @@ defmodule Commanded.Registration.SwarmRegistry do
 
   Registers the pid with the given name.
   """
-  @spec start_child(
-          name :: term(),
-          supervisor :: module(),
-          child_spec :: Commanded.Registration.start_child_arg()
-        ) ::
-          {:ok, pid} | {:error, term}
-  @impl Commanded.Registration
-  def start_child(name, supervisor, child_spec) do
+  @impl Commanded.Registration.Adapter
+  def start_child(_adapter_meta, name, supervisor, child_spec) do
     args =
       case child_spec do
         module when is_atom(module) -> [supervisor, {module, []}]
@@ -61,24 +53,20 @@ defmodule Commanded.Registration.SwarmRegistry do
 
   Registers the pid with the given name.
   """
-  @spec start_link(name :: term(), module :: module(), args :: [any()]) ::
-          {:ok, pid} | {:error, term}
-  @impl Commanded.Registration
-  def start_link(name, module, args), do: Monitor.start_link(name, module, args)
+  @impl Commanded.Registration.Adapter
+  def start_link(_adapter_meta, name, module, args), do: Monitor.start_link(name, module, args)
 
   @doc """
   Get the pid of a registered name.
   """
-  @spec whereis_name(name :: term) :: pid | :undefined
-  @impl Commanded.Registration
-  def whereis_name(name), do: Swarm.whereis_name(name)
+  @impl Commanded.Registration.Adapter
+  def whereis_name(_adapter_meta, name), do: Swarm.whereis_name(name)
 
   @doc """
   Return a `:via` tuple to route a message to a process by its registered name.
   """
-  @spec via_tuple(name :: term()) :: {:via, module(), name :: term()}
-  @impl Commanded.Registration
-  def via_tuple(name), do: {:via, :swarm, name}
+  @impl Commanded.Registration.Adapter
+  def via_tuple(_adapter_meta, name), do: {:via, :swarm, name}
 
   #
   # `GenServer` callback functions used by Swarm

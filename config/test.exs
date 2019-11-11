@@ -8,12 +8,7 @@ config :ex_unit,
   refute_receive_timeout: 2_000
 
 config :commanded,
-  assert_receive_event_timeout: 2_000,
-  event_store_adapter: Commanded.EventStore.Adapters.InMemory,
-  registry: Commanded.Registration.SwarmRegistry
-
-config :commanded, Commanded.EventStore.Adapters.InMemory,
-  serializer: Commanded.Serialization.JsonSerializer
+  assert_receive_event_timeout: 2_000
 
 config :swarm,
   nodes: [:"node1@127.0.0.1", :"node2@127.0.0.1"],

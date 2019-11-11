@@ -5,10 +5,13 @@ defmodule Commanded.AggregateTest do
   alias Commanded.Helpers.{ProcessHelper, Wait}
   alias Commanded.Registration
   alias Commanded.Registration.{RegisteredServer, RegisteredSupervisor}
+  alias Commanded.SwarmApp
 
   setup_all do
+    start_supervised!(SwarmApp)
+
     Wait.until(fn ->
-      case RegisteredSupervisor.start_child("startup") do
+      case RegisteredSupervisor.start_child(SwarmApp, "startup") do
         {:ok, pid} when is_pid(pid) -> :ok
         {:error, :no_node_available} -> flunk("no node available")
       end
@@ -17,9 +20,9 @@ defmodule Commanded.AggregateTest do
 
   test "should `start_child/3` for an aggregate process" do
     assert {:ok, "ACC1234"} =
-             Commanded.Aggregates.Supervisor.open_aggregate(BankAccount, "ACC1234")
+             Commanded.Aggregates.Supervisor.open_aggregate(SwarmApp, BankAccount, "ACC1234")
 
-    pid = Commanded.Registration.whereis_name({BankAccount, "ACC1234"})
+    pid = Commanded.Registration.whereis_name(SwarmApp, {SwarmApp, BankAccount, "ACC1234"})
     assert is_pid(pid)
   end
 end
